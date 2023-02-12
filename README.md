@@ -1,1 +1,1 @@
-# landsat99.github.io
+# Blog for Landsat99
