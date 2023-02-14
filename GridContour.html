@@ -1,10 +1,20 @@
 <!DOCTYPE html>
+<!-- saved from url=(0084)file:///C:/Users/Administrator/AppData/Local/Temp/mume2023114-5252-1b2e6sz.wy2c.html -->
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
       <title>GridContour</title>
       
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       
-      <link rel="stylesheet" href="./pic/katex.min.css">
+      <link rel="stylesheet" href="./GridContour_files/katex.min.css">
+      
+      
+      
+      
+      
+      
+      
+      
+      
       <style>
       /**
  * prism.js Github theme based on GitHub's theme.
@@ -253,7 +263,7 @@ pre[data-line] .line-highlight[data-end]:after {
     </head>
     <body for="html-export">
       <div class="mume markdown-preview  ">
-      <p><img src="./pic/banner.jpg" alt="图片"></p>
+      <p><img src="./GridContour_files/banner.jpg" alt="图片"></p>
 <h1 class="mume-header" id="-orthogonal-grid-point-set-outer-contours-">Orthogonal Grid Point Set Outer Contours</h1>
 
 <h3 class="mume-header" id="-description--">Description:</h3>
@@ -280,8 +290,8 @@ pre[data-line] .line-highlight[data-end]:after {
 </ol>
 <h3 class="mume-header" id="-example-image-">Example image:</h3>
 
-<p><img src="./pic/GridContour_1.png" alt="图片"><br>
-<img src="./pic/GridContour_2.png" alt="图片"></p>
+<p><img src="./GridContour_files/GridContour_1.png" alt="图片"><br>
+<img src="./GridContour_files/GridContour_2.png" alt="图片"></p>
 <h3 class="mume-header" id="-code-">Code：</h3>
 
 <font color="#5781b4">
@@ -376,10 +386,93 @@ pre[data-line] .line-highlight[data-end]:after {
 
 </pre><p><br><br><br>
 <font color="#5781b4"><br>
+<b>-- Version 1.3 --</b><br>
+</font></p>
+<p><img src="./GridContour_files/GridContour_21.png" alt="图片"><br>
+<img src="./GridContour_files/GridContour_22.png" alt="图片"></p>
+<p><strong>Spel:</strong><br>
+1 . Support for graphs with single-line branches.<br>
+2 . Single-line branching You cannot connect a branch-area block.<br>
+3 . The connection point of the branch area block has not been judged and has been deleted by the scan line. Therefore, the area contour cannot be closed at the connection point.</p>
+<pre data-role="codeBlock" data-info="python" class="language-python"><span class="token comment">#</span>
+<span class="token comment"># 不支持 “单线分支”的图形集合</span>
+<span class="token comment">#</span>
+<span class="token keyword keyword-import">import</span> matplotlib<span class="token punctuation">.</span>pyplot <span class="token keyword keyword-as">as</span> plt
+<span class="token keyword keyword-import">import</span> Data2 <span class="token keyword keyword-as">as</span> Data
+
+
+<span class="token keyword keyword-def">def</span> <span class="token function">XYMaxPoint</span><span class="token punctuation">(</span>PList<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    Xmax <span class="token operator">=</span> <span class="token builtin">max</span><span class="token punctuation">(</span>i<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token keyword keyword-for">for</span> i <span class="token keyword keyword-in">in</span> PList<span class="token punctuation">)</span>
+    Xlist <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    <span class="token keyword keyword-for">for</span> poi <span class="token keyword keyword-in">in</span> PList<span class="token punctuation">:</span>
+        <span class="token keyword keyword-if">if</span> poi<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">==</span> Xmax<span class="token punctuation">:</span>
+            Xlist<span class="token punctuation">.</span>append<span class="token punctuation">(</span>poi<span class="token punctuation">)</span>
+    Ymax <span class="token operator">=</span> <span class="token builtin">max</span><span class="token punctuation">(</span>i<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token keyword keyword-for">for</span> i <span class="token keyword keyword-in">in</span> Xlist<span class="token punctuation">)</span>
+    <span class="token keyword keyword-return">return</span> <span class="token punctuation">[</span>Xmax<span class="token punctuation">,</span> Ymax<span class="token punctuation">]</span>
+
+
+<span class="token keyword keyword-def">def</span> <span class="token function">NextPoi</span><span class="token punctuation">(</span>P<span class="token punctuation">,</span> PList<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    Unit <span class="token operator">=</span> <span class="token number">1.0</span>
+    Poi_B <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    TList <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    Grid_4 <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">[</span>P<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">+</span> Unit<span class="token punctuation">,</span> P<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">[</span>P<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">-</span> Unit<span class="token punctuation">,</span> P<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+              <span class="token punctuation">[</span>P<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> P<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">+</span> Unit<span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">[</span>P<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> P<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">-</span> Unit<span class="token punctuation">]</span><span class="token punctuation">]</span>
+    <span class="token keyword keyword-for">for</span> i <span class="token keyword keyword-in">in</span> Grid_4<span class="token punctuation">:</span>
+        <span class="token keyword keyword-if">if</span> i <span class="token keyword keyword-in">in</span> PList<span class="token punctuation">:</span>
+            TList<span class="token punctuation">.</span>append<span class="token punctuation">(</span>i<span class="token punctuation">)</span>
+    <span class="token keyword keyword-for">for</span> A <span class="token keyword keyword-in">in</span> TList<span class="token punctuation">:</span>
+        k <span class="token operator">=</span> <span class="token number">1</span>
+        <span class="token keyword keyword-for">for</span> B <span class="token keyword keyword-in">in</span> TList<span class="token punctuation">:</span>
+            Wise <span class="token operator">=</span> <span class="token punctuation">(</span>A<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">-</span> P<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token punctuation">(</span>B<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">-</span> P<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">-</span> \
+                <span class="token punctuation">(</span>A<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">-</span> P<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token punctuation">(</span>B<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">-</span> P<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+            <span class="token keyword keyword-if">if</span> Wise <span class="token operator">&lt;</span> <span class="token number">0</span><span class="token punctuation">:</span>
+                k <span class="token operator">=</span> <span class="token number">0</span>
+        <span class="token keyword keyword-if">if</span> k <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">:</span>
+            Poi_B <span class="token operator">=</span> A
+    <span class="token keyword keyword-return">return</span> Poi_B
+
+
+<span class="token keyword keyword-def">def</span> <span class="token function">plot2D</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">,</span> x_out<span class="token punctuation">,</span> y_out<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    plt<span class="token punctuation">.</span>scatter<span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">)</span>
+    plt<span class="token punctuation">.</span>plot<span class="token punctuation">(</span>x_out<span class="token punctuation">,</span> y_out<span class="token punctuation">)</span>
+    plt<span class="token punctuation">.</span>show<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword keyword-if">if</span> __name__ <span class="token operator">==</span> <span class="token string">'__main__'</span><span class="token punctuation">:</span>
+    PPs <span class="token operator">=</span> Data<span class="token punctuation">.</span>Points<span class="token punctuation">.</span>copy<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    PoiStart <span class="token operator">=</span> XYMaxPoint<span class="token punctuation">(</span>Data<span class="token punctuation">.</span>Points<span class="token punctuation">)</span>
+    Poi_A <span class="token operator">=</span> PoiStart
+    RList <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    Poi_B <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    n<span class="token operator">=</span><span class="token number">0</span>
+    <span class="token keyword keyword-while">while</span> Poi_B <span class="token operator">!=</span> PoiStart<span class="token punctuation">:</span>
+        Poi_B <span class="token operator">=</span> NextPoi<span class="token punctuation">(</span>Poi_A<span class="token punctuation">,</span> PPs<span class="token punctuation">)</span>
+        <span class="token keyword keyword-if">if</span> Poi_B <span class="token operator">!=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">:</span>
+            RList<span class="token punctuation">.</span>append<span class="token punctuation">(</span>Poi_A<span class="token punctuation">)</span>
+            PPs<span class="token punctuation">.</span>remove<span class="token punctuation">(</span>Poi_A<span class="token punctuation">)</span>
+            Poi_A <span class="token operator">=</span> Poi_B
+        <span class="token keyword keyword-else">else</span><span class="token punctuation">:</span>
+            PPs <span class="token operator">=</span> Data<span class="token punctuation">.</span>Points<span class="token punctuation">.</span>copy<span class="token punctuation">(</span><span class="token punctuation">)</span>
+            RList<span class="token punctuation">.</span>append<span class="token punctuation">(</span>Poi_A<span class="token punctuation">)</span>
+            PPs<span class="token punctuation">.</span>remove<span class="token punctuation">(</span>Poi_A<span class="token punctuation">)</span>
+            Poi_B <span class="token operator">=</span> NextPoi<span class="token punctuation">(</span>Poi_A<span class="token punctuation">,</span> PPs<span class="token punctuation">)</span>
+            Poi_A <span class="token operator">=</span> Poi_B
+        n <span class="token operator">=</span> n <span class="token operator">+</span> <span class="token number">1</span>
+        <span class="token keyword keyword-if">if</span> n <span class="token operator">==</span> <span class="token number">2</span><span class="token punctuation">:</span>
+            PPs<span class="token punctuation">.</span>append<span class="token punctuation">(</span>PoiStart<span class="token punctuation">)</span>   
+    RList<span class="token punctuation">.</span>append<span class="token punctuation">(</span>PoiStart<span class="token punctuation">)</span>
+
+    XList <span class="token operator">=</span> <span class="token punctuation">[</span>i<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token keyword keyword-for">for</span> i <span class="token keyword keyword-in">in</span> Data<span class="token punctuation">.</span>Points<span class="token punctuation">]</span>
+    YList <span class="token operator">=</span> <span class="token punctuation">[</span>i<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token keyword keyword-for">for</span> i <span class="token keyword keyword-in">in</span> Data<span class="token punctuation">.</span>Points<span class="token punctuation">]</span>
+    X_OutList <span class="token operator">=</span> <span class="token punctuation">[</span>i<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token keyword keyword-for">for</span> i <span class="token keyword keyword-in">in</span> RList<span class="token punctuation">]</span>
+    Y_OutList <span class="token operator">=</span> <span class="token punctuation">[</span>i<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token keyword keyword-for">for</span> i <span class="token keyword keyword-in">in</span> RList<span class="token punctuation">]</span>
+    plot2D<span class="token punctuation">(</span>XList<span class="token punctuation">,</span> YList<span class="token punctuation">,</span> X_OutList<span class="token punctuation">,</span> Y_OutList<span class="token punctuation">)</span>
+
+</pre><p><br><br><br>
+<font color="#5781b4"><br>
 <b>-- Version 1.2 --</b><br>
 </font></p>
-<p><img src="./pic/GridContour_11.png" alt="图片"><br>
-<img src="./pic/GridContour_12.png" alt="图片"></p>
+<p><img src="./GridContour_files/GridContour_11.png" alt="图片"><br>
+<img src="./GridContour_files/GridContour_12.png" alt="图片"></p>
 <ul>
 <li>Spel:<br>
 Graphical collections of "single line branching" are not supported.</li>
