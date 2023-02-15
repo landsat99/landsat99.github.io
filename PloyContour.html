@@ -290,11 +290,11 @@ This regular-routing algorithm is purely original code and does not reference ot
 5- When the starting point is encountered again, the contour line completes the traversal.<br>
 <br></li>
 <li>说明：<br>
-1- 首先，把所有多边形的方向正则化。<br>
-2- 得到多边形的交点后 并加入路由信息。<br>
-3- 将所有已包含路由信息的交点 重新放置在各多边形上，并再次正则化。<br>
-4- 从集合的极值点出发，沿正则边线路由，遇到交点按路由标志转向。<br>
-5- 当再次遇到出发点，轮廓线完成遍历。</li>
+1- 所有多边形的方向正则化。<br>
+2- 得到多边形的交点 加入路由。<br>
+3- 已包含路由信息的交点放置在各多边形上，再次正则化。<br>
+4- 极值点出发，沿正则边线路由。交点按路由标志转向。<br>
+5- 遇到出发点，轮廓线完成遍历。</li>
 </ul>
 <p><br> <br></p>
 <pre data-role="codeBlock" data-info="python" class="language-python"><span class="token keyword keyword-import">import</span> operator
